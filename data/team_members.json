@@ -1,0 +1,50 @@
+[
+  {
+    "id": "andrezza",
+    "name": "Andrezza",
+    "role": "Diretora",
+    "level": "diretoria",
+    "image": "public/img/equipe/andrezza.jpg",
+    "fallback": "AO"
+  },
+  {
+    "id": "patricia",
+    "name": "Patrícia Jota",
+    "role": "Diretora de Operações",
+    "level": "diretoria",
+    "image": "public/img/equipe/patricia.jpg",
+    "fallback": "PJ"
+  },
+  {
+    "id": "graziele",
+    "name": "Graziele",
+    "role": "Coordenadora Contábil",
+    "level": "coordenacao",
+    "image": "public/img/equipe/graziele.jpg",
+    "fallback": "GR"
+  },
+  {
+    "id": "lucelia",
+    "name": "Lucelia",
+    "role": "Coordenadora Fiscal",
+    "level": "coordenacao",
+    "image": "public/img/equipe/lucelia.jpg",
+    "fallback": "LC"
+  },
+  {
+    "id": "fernanda",
+    "name": "Fernanda",
+    "role": "Coordenadora Dep. Pessoal",
+    "level": "coordenacao",
+    "image": "public/img/equipe/fernanda.jpg",
+    "fallback": "FN"
+  },
+  {
+    "id": "mara",
+    "name": "Mara",
+    "role": "Conformidade e Legalização",
+    "level": "coordenacao",
+    "image": "public/img/equipe/mara.jpg",
+    "fallback": "MR"
+  }
+]
