@@ -3,86 +3,693 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área do Cliente - ACMais</title>
+    <title>Dashboard do Cliente - ACMais</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
+        :root {
+            --bg-body: #0a0a0f;
+            --bg-card: rgba(20, 20, 32, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5fa;
+            --text-muted: #9ca3af;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f7f8fa;
+            --bg-card: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-main: #333333;
+            --text-muted: #666666;
+        }
+
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-body, #0a0a0a);
-            color: var(--text-main, #f5f5f5);
+            font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
         }
-        .dashboard-container {
-            background: rgba(30, 30, 30, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        h1 {
-            color: var(--ciano, #00d2ff);
-            margin-bottom: 20px;
+
+        .logo-img {
+            height: 36px;
+            width: auto;
         }
-        p {
-            margin-bottom: 30px;
-            line-height: 1.6;
-            color: var(--text-muted, #a0a0a0);
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         .btn-logout {
-            background: linear-gradient(135deg, #ff4b4b, #d10000);
-            color: #fff;
-            border: none;
-            padding: 12px 24px;
+            background: rgba(255, 75, 75, 0.1);
+            color: #ff4b4b;
+            border: 1px solid rgba(255, 75, 75, 0.2);
+            padding: 8px 16px;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-size: 1rem;
+            transition: all 0.2s;
+            font-size: 0.85rem;
         }
+
         .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
+            background: #ff4b4b;
+            color: #fff;
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(123, 94, 167, 0.1);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        .welcome-hero {
+            background: linear-gradient(135deg, rgba(123, 94, 167, 0.2), rgba(109, 216, 232, 0.15));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-hero h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            color: var(--text-main);
+        }
+
+        .welcome-hero p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 600px;
+        }
+
+        /* Responsive Dashboard layout with left-hand buttons and panels */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 14px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-btn:hover {
+            color: var(--text-main);
+            background: rgba(123, 94, 167, 0.05);
+        }
+
+        .sidebar-btn.active {
+            color: #fff;
+            background: var(--roxo);
+            border-color: var(--roxo);
+        }
+
+        .content-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            min-height: 500px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .ac-tab-panel {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .ac-tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ac-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .ac-panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .ac-panel-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .ac-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .ac-badge.warning {
+            background: rgba(244, 130, 42, 0.15);
+            color: var(--laranja);
+            border: 1px solid rgba(244, 130, 42, 0.3);
+        }
+
+        .ac-badge.ok {
+            background: rgba(109, 216, 232, 0.15);
+            color: var(--ciano);
+            border: 1px solid rgba(109, 216, 232, 0.3);
+        }
+
+        .ac-table-wrap {
+            overflow-x: auto;
+        }
+
+        .ac-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .ac-table th {
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ac-table td {
+            padding: 16px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .ac-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-vence {
+            background: rgba(244, 130, 42, 0.1);
+            color: var(--laranja);
+        }
+
+        .status-ok {
+            background: rgba(109, 216, 232, 0.1);
+            color: var(--ciano);
+        }
+
+        .status-pago {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+        }
+
+        .btn-download {
+            background: rgba(123, 94, 167, 0.15);
+            color: var(--roxo);
+            border: 1px solid rgba(123, 94, 167, 0.3);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            background: var(--roxo);
+            color: #fff;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-note a {
+            color: var(--ciano);
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Bem-vindo à Área do Cliente</h1>
-        <p>Esta é uma área segura. Apenas usuários autenticados com uma sessão válida podem acessar este painel.</p>
-        <p>Aqui estarão disponíveis relatórios financeiros, documentos contábeis e contato direto com nossos especialistas.</p>
-        <button class="btn-logout" id="logoutBtn">Sair da Conta</button>
-    </div>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-wrap">
+                <img id="theme-logo" class="logo-img" src="/img/logo ACMAIS CCBPOE Light.png" alt="ACMais Logo">
+                <span style="font-weight:700; opacity:0.8;">| Cliente</span>
+            </div>
+            <div class="user-profile">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <div class="user-info">
+                    <div class="user-name" id="profileName">Cliente ACMais</div>
+                    <div class="user-email" id="profileEmail">cliente@acmais.com.br</div>
+                </div>
+                <button class="btn-logout" id="logoutBtn">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="welcome-hero">
+            <h2 id="welcomeTitle">Olá, Cliente!</h2>
+            <p>Seja bem-vindo ao seu painel. Abaixo você encontra os dados consolidados das suas guias tributárias, faturas e certidões negativas em tempo real.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Sidebar with buttons for tabs -->
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active" data-panel="panel-guias">📄 Guias em Aberto</button>
+                <button class="sidebar-btn" data-panel="panel-honorarios">💰 Honorários</button>
+                <button class="sidebar-btn" data-panel="panel-cnd">✅ CND</button>
+                <button class="sidebar-btn" data-panel="panel-certdig">🔏 Certificado Digital</button>
+            </div>
+
+            <!-- Content Panel containing the tab contents -->
+            <div class="content-panel">
+                
+                <!-- Panel: Guias -->
+                <div class="ac-tab-panel active" id="panel-guias">
+                    <div class="ac-panel-header">
+                        <div>
+                            <div class="ac-panel-title">Guias de Impostos</div>
+                            <div class="ac-panel-subtitle">Vencimentos e valores vigentes</div>
+                        </div>
+                        <span class="ac-badge warning">⚡ 2 pendentes</span>
+                    </div>
+                    <div class="ac-table-wrap">
+                        <table class="ac-table">
+                            <thead>
+                                <tr>
+                                    <th>Competência</th>
+                                    <th>Imposto / Guia</th>
+                                    <th>Vencimento</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Guia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mar/2026</td>
+                                    <td>DAS - Simples Nacional</td>
+                                    <td>20/04/2026</td>
+                                    <td>R$ 4.250,00</td>
+                                    <td><span class="status-badge status-vence">⚡ Vence em breve</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('DAS_Simples_Nacional_03_2026.pdf')">Visualizar PDF</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Mar/2026</td>
+                                    <td>FGTS Digital</td>
+                                    <td>07/04/2026</td>
+                                    <td>R$ 820,00</td>
+                                    <td><span class="status-badge status-ok">✓ Disponibilizado</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('FGTS_Digital_03_2026.pdf')">Visualizar PDF</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Fev/2026</td>
+                                    <td>GPS - INSS</td>
+                                    <td>20/03/2026</td>
+                                    <td>R$ 480,00</td>
+                                    <td><span class="status-badge status-pago">✓ Pago</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('GPS_INSS_Fev_2026.pdf')">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Fev/2026</td>
+                                    <td>DAS - Simples Nacional</td>
+                                    <td>20/03/2026</td>
+                                    <td>R$ 3.940,00</td>
+                                    <td><span class="status-badge status-pago">✓ Pago</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('DAS_Simples_Nacional_02_2026.pdf')">Comprovante</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Panel: Honorários -->
+                <div class="ac-tab-panel" id="panel-honorarios">
+                    <div class="ac-panel-header">
+                        <div>
+                            <div class="ac-panel-title">Mensalidades Contábeis</div>
+                            <div class="ac-panel-subtitle">Histórico de cobranças dos nossos honorários</div>
+                        </div>
+                        <span class="ac-badge ok">✓ Sem pendências</span>
+                    </div>
+                    <div class="ac-table-wrap">
+                        <table class="ac-table">
+                            <thead>
+                                <tr>
+                                    <th>Mês</th>
+                                    <th>Serviço</th>
+                                    <th>Vencimento</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Fatura</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jun/2026</td>
+                                    <td>Mensalidade Contabilidade Consultiva + BPO</td>
+                                    <td>10/07/2026</td>
+                                    <td>R$ 1.200,00</td>
+                                    <td><span class="status-badge status-vence">⚡ A vencer</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('Fatura_ACMais_Jun_2026.pdf')">Boleto</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Mai/2026</td>
+                                    <td>Mensalidade Contabilidade Consultiva + BPO</td>
+                                    <td>10/06/2026</td>
+                                    <td>R$ 1.200,00</td>
+                                    <td><span class="status-badge status-pago">✓ Pago</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('Recibo_ACMais_Mai_2026.pdf')">Nota Fiscal / Recibo</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Abr/2026</td>
+                                    <td>Mensalidade Contabilidade Consultiva + BPO</td>
+                                    <td>10/05/2026</td>
+                                    <td>R$ 1.200,00</td>
+                                    <td><span class="status-badge status-pago">✓ Pago</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('Recibo_ACMais_Abr_2026.pdf')">Nota Fiscal / Recibo</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Panel: CND -->
+                <div class="ac-tab-panel" id="panel-cnd">
+                    <div class="ac-panel-header">
+                        <div>
+                            <div class="ac-panel-title">Certidões Negativas vigentes</div>
+                            <div class="ac-panel-subtitle">Documentos de regularidade fiscal atualizados automaticamente</div>
+                        </div>
+                    </div>
+                    <div class="ac-table-wrap">
+                        <table class="ac-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Órgão Emissor</th>
+                                    <th>Emissão</th>
+                                    <th>Validade</th>
+                                    <th>Status</th>
+                                    <th>Download</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Federal / Previdenciária</td>
+                                    <td>Receita Federal do Brasil / PGFN</td>
+                                    <td>10/04/2026</td>
+                                    <td>10/10/2026</td>
+                                    <td><span class="status-badge status-ok">✓ Válida</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('CND_Receita_Federal.pdf')">Baixar PDF</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Estadual</td>
+                                    <td>SEFAZ - Minas Gerais</td>
+                                    <td>18/05/2026</td>
+                                    <td>18/11/2026</td>
+                                    <td><span class="status-badge status-ok">✓ Válida</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('CND_Estadual_SEFAZ.pdf')">Baixar PDF</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Municipal</td>
+                                    <td>Prefeitura de Belo Horizonte (PBH)</td>
+                                    <td>15/02/2026</td>
+                                    <td>15/08/2026</td>
+                                    <td><span class="status-badge status-ok">✓ Válida</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('CND_Municipal_PBH.pdf')">Baixar PDF</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Regularidade do FGTS</td>
+                                    <td>Caixa Econômica Federal (CRF)</td>
+                                    <td>01/06/2026</td>
+                                    <td>30/06/2026</td>
+                                    <td><span class="status-badge status-ok">✓ Válida</span></td>
+                                    <td><button class="btn-download" onclick="downloadMockFile('CRF_FGTS_Caixa.pdf')">Baixar PDF</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Panel: Certificado Digital -->
+                <div class="ac-tab-panel" id="panel-certdig">
+                    <div class="ac-panel-header">
+                        <div>
+                            <div class="ac-panel-title">Monitoramento de Certificado Digital</div>
+                            <div class="ac-panel-subtitle">Evite interrupções no faturamento monitorando o vencimento</div>
+                        </div>
+                    </div>
+                    <div class="ac-table-wrap">
+                        <table class="ac-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Titular</th>
+                                    <th>Documento</th>
+                                    <th>Validade Final</th>
+                                    <th>Dias Restantes</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>e-CNPJ A1 (Arquivo)</td>
+                                    <td>ACMAIS CONSULTORIA E CONTABILIDADE LTDA</td>
+                                    <td>04.833.205/0001-09</td>
+                                    <td>15/12/2026</td>
+                                    <td>173 dias</td>
+                                    <td><span class="status-badge status-ok">✓ Válido</span></td>
+                                </tr>
+                                <tr>
+                                    <td>e-CPF A3 (Token/Cartão)</td>
+                                    <td>SÓCIO RESPONSÁVEL ACMais</td>
+                                    <td>***.***.836-**</td>
+                                    <td>22/07/2026</td>
+                                    <td>27 dias</td>
+                                    <td><span class="status-badge status-vence">⚡ Renovar em breve</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Precisa de ajuda com alguma guia ou informação? <a href="mailto:contato@acmaiscont.com.br">Contate o suporte ACMais</a>.
+        </div>
+    </main>
 
     <script>
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('acmais_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('acmais_theme', newTheme);
+            updateThemeUI(newTheme);
+        }
+
+        function updateThemeUI(theme) {
+            const icon = document.getElementById('theme-icon');
+            const logo = document.getElementById('theme-logo');
+            if (theme === 'light') {
+                icon.textContent = '☀️';
+                logo.src = '/img/logo ACMAIS CCBPOE Dark.png';
+            } else {
+                icon.textContent = '🌙';
+                logo.src = '/img/logo ACMAIS CCBPOE Light.png';
+            }
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        initTheme();
+
+        // Profile loaders
+        async function fetchProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                const data = await response.json();
+                if (data.loggedIn && data.userType === 'cliente') {
+                    document.getElementById('profileName').textContent = data.name || 'Cliente ACMais';
+                    document.getElementById('profileEmail').textContent = data.email || 'cliente@acmais.com.br';
+                    document.getElementById('welcomeTitle').textContent = `Olá, ${data.name || 'Cliente'}!`;
+                } else {
+                    window.location.href = '/?error=unauthorized';
+                }
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+            }
+        }
+
+        // Sidebar tab switching functionality
+        const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+        const panels = document.querySelectorAll('.ac-tab-panel');
+
+        sidebarButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetPanelId = btn.getAttribute('data-panel');
+
+                sidebarButtons.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(targetPanelId).classList.add('active');
+            });
+        });
+
+        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             try {
                 const response = await fetch('/api/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
-                
                 const data = await response.json();
-                if(data.success) {
+                if (data.success) {
                     window.location.href = data.redirect;
-                } else {
-                    alert('Erro ao sair: ' + data.message);
                 }
-            } catch (error) {
-                console.error('Erro na requisição de logoff', error);
-                alert('Ocorreu um erro ao tentar sair.');
+            } catch (err) {
+                console.error(err);
             }
         });
+
+        // Mock document viewing helper
+        function downloadMockFile(filename) {
+            alert(`Visualizando ou baixando arquivo: ${filename}\n(Este é um ambiente de demonstração completo. Em produção, este link aponta para o diretório de arquivos criptografados do cliente).`);
+        }
+
+        fetchProfile();
     </script>
 </body>
 </html>

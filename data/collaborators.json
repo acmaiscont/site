@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Administrador ACMais",
+    "email": "admin@acmais.com.br",
+    "password": "admin2026",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "name": "Coordenadora Graziele",
+    "email": "grazi@acmais.com.br",
+    "password": "grazi2026",
+    "role": "coordenador"
+  },
+  {
+    "id": 3,
+    "name": "Mara Conformidade",
+    "email": "mara@acmais.com.br",
+    "password": "mara2026",
+    "role": "colaborador"
+  }
+]

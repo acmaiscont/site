@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Colaborador - ACMais</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        :root {
+            --bg-body: #0a0a0f;
+            --bg-card: rgba(20, 20, 32, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5fa;
+            --text-muted: #9ca3af;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f7f8fa;
+            --bg-card: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-main: #333333;
+            --text-muted: #666666;
+        }
+
+        body {
+            font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--ciano);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-logout {
+            background: rgba(255, 75, 75, 0.1);
+            color: #ff4b4b;
+            border: 1px solid rgba(255, 75, 75, 0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-logout:hover {
+            background: #ff4b4b;
+            color: #fff;
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(123, 94, 167, 0.1);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 14px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-btn:hover {
+            color: var(--text-main);
+            background: rgba(123, 94, 167, 0.05);
+        }
+
+        .sidebar-btn.active {
+            color: #fff;
+            background: var(--roxo);
+            border-color: var(--roxo);
+        }
+
+        .content-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            min-height: 500px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .panel-section {
+            display: none;
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input, select {
+            background: rgba(10, 10, 15, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        [data-theme="dark"] input, [data-theme="dark"] select {
+            background: rgba(10, 10, 15, 0.6);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--ciano);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ciano), var(--ciano-dark));
+            color: #05050a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(109, 216, 232, 0.3);
+        }
+
+        .collab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        .collab-table th, .collab-table td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .collab-table th {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .role-admin { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .role-coordenador { background: rgba(123, 94, 167, 0.15); color: #a78bfa; }
+        .role-colaborador { background: rgba(109, 216, 232, 0.15); color: var(--ciano); }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* Leader list styling */
+        .leader-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .leader-card-editor {
+            background: rgba(10, 10, 15, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        [data-theme="dark"] .leader-card-editor {
+            background: rgba(10, 10, 15, 0.5);
+        }
+
+        .leader-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .leader-preview-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--ciano);
+        }
+
+        .leader-fallback-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--roxo), var(--ciano));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .leader-card-details h4 {
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .leader-card-details p {
+            margin: 2px 0 0 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .alert-success {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .restricted-msg {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .restricted-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-wrap">
+                <img id="theme-logo" class="logo-img" src="/img/logo ACMAIS CCBPOE Light.png" alt="ACMais Logo">
+                <span style="font-weight:700; opacity:0.8;">| Colaborador</span>
+            </div>
+            <div class="user-profile">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Carregando...</div>
+                    <div class="user-role" id="userRole">---</div>
+                </div>
+                <button class="btn-logout" id="logoutBtn">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active" data-section="sec-perfil">👤 Meu Perfil</button>
+                <button class="sidebar-btn" id="nav-cadastrar" data-section="sec-cadastro">➕ Cadastrar Colaborador</button>
+                <button class="sidebar-btn" id="nav-gerenciar" data-section="sec-gerencia">👥 Gerenciar Colaboradores</button>
+                <button class="sidebar-btn" id="nav-cad-cliente" data-section="sec-cad-cliente">🏢 Cadastrar Cliente</button>
+                <button class="sidebar-btn" id="nav-ger-cliente" data-section="sec-ger-cliente">💼 Gerenciar Clientes</button>
+                <button class="sidebar-btn" id="nav-lideranca" data-section="sec-lideranca">🏆 "A Cara da ACMais"</button>
+            </div>
+
+            <div class="content-panel">
+                <div class="alert-success" id="alertMsg">Operação realizada com sucesso!</div>
+
+                <!-- Section: Perfil -->
+                <div class="panel-section active" id="sec-perfil">
+                    <h2>Meu Perfil</h2>
+                    <p style="font-size: 1.1rem;">Seja bem-vindo de volta, <strong id="profileTitleName">Colaborador</strong>!</p>
+                    <p>Sua função atual permite realizar as seguintes ações:</p>
+                    
+                    <div style="background: rgba(123, 94, 167, 0.05); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 20px;">
+                        <h4 style="margin: 0 0 10px 0; color: var(--roxo);">Suas Permissões Ativas</h4>
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;" id="permissionList">
+                            <li>Visualização de relatórios do painel interno.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section: Cadastro Colaborador (Coordenador & Admin) -->
+                <div class="panel-section" id="sec-cadastro">
+                    <h2>Cadastrar Novo Colaborador</h2>
+                    <div id="cadastro-restricted" class="restricted-msg" style="display:none;">
+                        <div class="restricted-icon">🔒</div>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas coordenadores e administradores possuem permissão para cadastrar novos colaboradores no sistema.</p>
+                    </div>
+
+                    <div id="cadastro-form-container">
+                        <form id="collabRegisterForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="regName">Nome Completo</label>
+                                    <input type="text" id="regName" required placeholder="Ex: João Silva">
+                                </div>
+                                <div class="form-group">
+                                    <label for="regEmail">E-mail de Trabalho</label>
+                                    <input type="email" id="regEmail" required placeholder="silva@acmais.com.br">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="regPassword">Senha Inicial</label>
+                                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres">
+                                </div>
+                                <div class="form-group">
+                                    <label for="regRole">Nível de Acesso (Cargo)</label>
+                                    <select id="regRole" required>
+                                        <option value="colaborador">Colaborador</option>
+                                        <option value="coordenador">Coordenador</option>
+                                        <option value="admin">Administrador</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Section: Gerência de Colaboradores (Coordenador & Admin) -->
+                <div class="panel-section" id="sec-gerencia">
+                    <h2>Gerenciar Colaboradores</h2>
+                    <div id="gerencia-restricted" class="restricted-msg" style="display:none;">
+                        <div class="restricted-icon">🔒</div>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas coordenadores e administradores possuem permissão para visualizar e gerenciar colaboradores.</p>
+                    </div>
+
+                    <div id="gerencia-container">
+                        <p id="delete-permission-hint" style="color: var(--laranja); font-size: 0.9rem; font-weight: bold; margin-bottom: 20px;">
+                            💡 Nota: Ambos coordenador e administrador listam colaboradores. Porém, apenas o Administrador pode Excluir.
+                        </p>
+                        <div class="ac-table-wrap">
+                            <table class="collab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>E-mail</th>
+                                        <th>Cargo / Nível</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="collabTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;">Carregando colaboradores...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Cadastrar Cliente (Coordenador & Admin) -->
+                <div class="panel-section" id="sec-cad-cliente">
+                    <h2>Cadastrar Novo Cliente</h2>
+                    <div id="cad-cliente-restricted" class="restricted-msg" style="display:none;">
+                        <div class="restricted-icon">🔒</div>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas coordenadores e administradores possuem permissão para cadastrar novos clientes.</p>
+                    </div>
+
+                    <div id="cad-cliente-container">
+                        <form id="clientRegisterForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientName">Razão Social / Nome da Empresa</label>
+                                    <input type="text" id="clientName" required placeholder="Ex: Clínica Médica Silva Ltda">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientEmail">E-mail Principal (Acesso Portal)</label>
+                                    <input type="email" id="clientEmail" required placeholder="financeiro@empresa.com.br">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientPassword">Senha de Acesso do Cliente</label>
+                                    <input type="password" id="clientPassword" required placeholder="Senha inicial segura">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientPhone">Telefone / WhatsApp</label>
+                                    <input type="text" id="clientPhone" placeholder="Ex: (31) 99999-9999">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Cadastrar Cliente</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Section: Gerenciar Clientes (Coordenador & Admin) -->
+                <div class="panel-section" id="sec-ger-cliente">
+                    <h2>Gerenciar Clientes</h2>
+                    <div id="ger-cliente-restricted" class="restricted-msg" style="display:none;">
+                        <div class="restricted-icon">🔒</div>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas coordenadores e administradores possuem permissão para visualizar e excluir clientes.</p>
+                    </div>
+
+                    <div id="ger-cliente-container">
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                            Lista de empresas parceiras com acesso ativo à Área do Cliente ACMais. Apenas administradores podem excluir cadastros.
+                        </p>
+                        <div class="ac-table-wrap">
+                            <table class="collab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome / Empresa</th>
+                                        <th>E-mail</th>
+                                        <th>Telefone</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;">Carregando clientes...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Liderança "A cara da acmais" (Admin apenas) -->
+                <div class="panel-section" id="sec-lideranca">
+                    <h2>Editar Seção "A Cara da ACMais"</h2>
+                    <div id="lideranca-restricted" class="restricted-msg" style="display:none;">
+                        <div class="restricted-icon">🔒</div>
+                        <h3>Acesso Restrito</h3>
+                        <p>Apenas o Administrador Geral da ACMais tem permissão para editar os membros e alterar as fotos expostas no site principal.</p>
+                    </div>
+
+                    <div id="lideranca-container">
+                        <p style="margin-bottom: 30px; color: var(--text-muted);">
+                            Utilize o formulário de cada cartão abaixo para modificar as informações exibidas de cada membro da diretoria ou coordenação. 
+                            Você também pode enviar fotos atualizadas.
+                        </p>
+                        
+                        <div class="leader-editor-grid" id="leaderEditorGrid">
+                            <!-- Cards will load here -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('acmais_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('acmais_theme', newTheme);
+            updateThemeUI(newTheme);
+        }
+
+        function updateThemeUI(theme) {
+            const icon = document.getElementById('theme-icon');
+            const logo = document.getElementById('theme-logo');
+            if (theme === 'light') {
+                icon.textContent = '☀️';
+                logo.src = '/img/logo ACMAIS CCBPOE Dark.png';
+            } else {
+                icon.textContent = '🌙';
+                logo.src = '/img/logo ACMAIS CCBPOE Light.png';
+            }
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        initTheme();
+
+        // Fetch User and setup permissions
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/profile');
+                const data = await res.json();
+                
+                if (!data.loggedIn || data.userType !== 'colaborador') {
+                    window.location.href = '/colaborador/login';
+                    return;
+                }
+
+                currentUser = data;
+                document.getElementById('userName').textContent = data.name;
+                document.getElementById('profileTitleName').textContent = data.name;
+                document.getElementById('userRole').textContent = data.role;
+
+                setupPermissions(data.role);
+            } catch (err) {
+                console.error(err);
+                window.location.href = '/colaborador/login';
+            }
+        }
+
+        function setupPermissions(role) {
+            const list = document.getElementById('permissionList');
+            list.innerHTML = '';
+
+            if (role === 'colaborador') {
+                list.innerHTML += '<li>Visualização de relatórios do painel interno.</li>';
+                list.innerHTML += '<li>Acesso à lista geral de ramais internos da ACMais.</li>';
+                
+                // Hide restricted nav links
+                document.getElementById('nav-cadastrar').style.display = 'none';
+                document.getElementById('nav-gerenciar').style.display = 'none';
+                document.getElementById('nav-cad-cliente').style.display = 'none';
+                document.getElementById('nav-ger-cliente').style.display = 'none';
+                document.getElementById('nav-lideranca').style.display = 'none';
+            } 
+            else if (role === 'coordenador') {
+                list.innerHTML += '<li>Visualização e gerenciamento interno.</li>';
+                list.innerHTML += '<li>Cadastrar novos colaboradores e clientes.</li>';
+                list.innerHTML += '<li>Visualizar a lista geral de colaboradores e clientes cadastrados.</li>';
+                
+                // Hide lideranca nav link (Admin only)
+                document.getElementById('nav-lideranca').style.display = 'none';
+            } 
+            else if (role === 'admin') {
+                list.innerHTML += '<li>Permissão total de Administrador Geral.</li>';
+                list.innerHTML += '<li>Cadastrar novos colaboradores, clientes, coordenadores e administradores.</li>';
+                list.innerHTML += '<li>Gerenciar e <strong>excluir</strong> colaboradores e clientes.</li>';
+                list.innerHTML += '<li>Modificar fotos, nomes e dados da seção <strong>"A Cara da ACMais"</strong>.</li>';
+            }
+        }
+
+        // Navigation panels toggling
+        const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+        const sections = document.querySelectorAll('.panel-section');
+
+        sidebarButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetSecId = btn.getAttribute('data-section');
+
+                sidebarButtons.forEach(b => b.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(targetSecId).classList.add('active');
+
+                // Trigger loads based on section
+                if (targetSecId === 'sec-cadastro') loadCadastroSection();
+                if (targetSecId === 'sec-gerencia') loadGerenciaSection();
+                if (targetSecId === 'sec-cad-cliente') loadCadClienteSection();
+                if (targetSecId === 'sec-ger-cliente') loadGerClienteSection();
+                if (targetSecId === 'sec-lideranca') loadLiderancaSection();
+            });
+        });
+
+        // Loaders
+        function loadCadastroSection() {
+            const isRestricted = currentUser.role !== 'admin' && currentUser.role !== 'coordenador';
+            document.getElementById('cadastro-restricted').style.display = isRestricted ? 'block' : 'none';
+            document.getElementById('cadastro-form-container').style.display = isRestricted ? 'none' : 'block';
+        }
+
+        function loadCadClienteSection() {
+            const isRestricted = currentUser.role !== 'admin' && currentUser.role !== 'coordenador';
+            document.getElementById('cad-cliente-restricted').style.display = isRestricted ? 'block' : 'none';
+            document.getElementById('clientRegisterForm').style.display = isRestricted ? 'none' : 'block';
+        }
+
+        async function loadGerenciaSection() {
+            const isRestricted = currentUser.role !== 'admin' && currentUser.role !== 'coordenador';
+            document.getElementById('gerencia-restricted').style.display = isRestricted ? 'block' : 'none';
+            document.getElementById('gerencia-container').style.display = isRestricted ? 'none' : 'block';
+
+            if (isRestricted) return;
+
+            try {
+                const res = await fetch('/api/collaborators');
+                const list = await res.json();
+                const tbody = document.getElementById('collabTableBody');
+                tbody.innerHTML = '';
+
+                list.forEach(c => {
+                    const tr = document.createElement('tr');
+                    
+                    let actionsHtml = '<em>Sem ações</em>';
+                    if (currentUser.role === 'admin') {
+                        if (c.id === currentUser.userId) {
+                            actionsHtml = '<strong>(Você)</strong>';
+                        } else {
+                            actionsHtml = `<button class="btn-delete" onclick="deleteCollab(${c.id})">Excluir</button>`;
+                        }
+                    }
+
+                    tr.innerHTML = `
+                        <td>${c.name}</td>
+                        <td>${c.email}</td>
+                        <td><span class="role-badge role-${c.role}">${c.role}</span></td>
+                        <td>${actionsHtml}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadGerClienteSection() {
+            const isRestricted = currentUser.role !== 'admin' && currentUser.role !== 'coordenador';
+            document.getElementById('ger-cliente-restricted').style.display = isRestricted ? 'block' : 'none';
+            document.getElementById('ger-cliente-container').style.display = isRestricted ? 'none' : 'block';
+
+            if (isRestricted) return;
+
+            try {
+                const res = await fetch('/api/clients');
+                const list = await res.json();
+                const tbody = document.getElementById('clientTableBody');
+                tbody.innerHTML = '';
+
+                if (list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum cliente cadastrado.</td></tr>';
+                    return;
+                }
+
+                list.forEach(client => {
+                    const tr = document.createElement('tr');
+                    
+                    let actionsHtml = '<em>Sem ações</em>';
+                    if (currentUser.role === 'admin') {
+                        actionsHtml = `<button class="btn-delete" onclick="deleteClient(${client.id})">Excluir</button>`;
+                    }
+
+                    tr.innerHTML = `
+                        <td>${client.name}</td>
+                        <td>${client.email}</td>
+                        <td>${client.phone || '---'}</td>
+                        <td>${actionsHtml}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteCollab(id) {
+            if (!confirm('Deseja realmente excluir este colaborador? Esta ação não pode ser desfeita.')) return;
+
+            try {
+                const res = await fetch(`/api/collaborators/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Colaborador excluído com sucesso.');
+                    loadGerenciaSection();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteClient(id) {
+            if (!confirm('Deseja realmente excluir este cliente? O acesso dele ao portal será revogado.')) return;
+
+            try {
+                const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Cliente excluído com sucesso.');
+                    loadGerClienteSection();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadLiderancaSection() {
+            const isRestricted = currentUser.role !== 'admin';
+            document.getElementById('lideranca-restricted').style.display = isRestricted ? 'block' : 'none';
+            document.getElementById('lideranca-container').style.display = isRestricted ? 'none' : 'block';
+
+            if (isRestricted) return;
+
+            try {
+                const res = await fetch('/api/team');
+                const team = await res.json();
+                const grid = document.getElementById('leaderEditorGrid');
+                grid.innerHTML = '';
+
+                team.forEach(member => {
+                    const card = document.createElement('div');
+                    card.className = 'leader-card-editor';
+                    
+                    const imgSrc = member.image.startsWith('public/') ? member.image.substring(7) : member.image;
+                    const imgHtml = member.image 
+                        ? `<img class="leader-preview-img" src="${imgSrc}" alt="${member.name}">`
+                        : `<div class="leader-fallback-circle">${member.fallback || 'LD'}</div>`;
+
+                    card.innerHTML = `
+                        <div class="leader-card-header">
+                            ${imgHtml}
+                            <div class="leader-card-details">
+                                <h4>${member.name}</h4>
+                                <p>${member.role}</p>
+                            </div>
+                        </div>
+                        <form onsubmit="updateLeader(event, '${member.id}')" enctype="multipart/form-data">
+                            <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                                <div class="form-group">
+                                    <label style="font-size:0.75rem;">Nome Exibido</label>
+                                    <input type="text" name="name" value="${member.name}" required style="padding:6px; font-size:0.85rem;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.75rem;">Cargo (Texto)</label>
+                                    <input type="text" name="role" value="${member.role}" required style="padding:6px; font-size:0.85rem;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.75rem;">Nível</label>
+                                    <select name="level" style="padding:6px; font-size:0.85rem;">
+                                        <option value="diretoria" ${member.level === 'diretoria' ? 'selected' : ''}>Diretoria</option>
+                                        <option value="coordenacao" ${member.level === 'coordenacao' ? 'selected' : ''}>Coordenação</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.75rem;">Iniciais (Fallback)</label>
+                                    <input type="text" name="fallback" value="${member.fallback || ''}" maxlength="2" style="padding:6px; font-size:0.85rem;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.75rem;">Enviar Nova Foto</label>
+                                    <input type="file" name="imageFile" accept="image/*" style="padding:6px; font-size:0.85rem;">
+                                </div>
+                                <button type="submit" class="btn-primary" style="padding:8px; font-size:0.8rem; margin-top:5px; width:100%;">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateLeader(e, memberId) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            formData.append('memberId', memberId);
+
+            try {
+                const res = await fetch('/api/team/update', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Membro da liderança atualizado no site principal!');
+                    loadLiderancaSection();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Collaborator registration handler
+        document.getElementById('collabRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                role: document.getElementById('regRole').value
+            };
+
+            try {
+                const res = await fetch('/api/collaborators', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Novo colaborador cadastrado com sucesso!');
+                    document.getElementById('collabRegisterForm').reset();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Client registration handler
+        document.getElementById('clientRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                name: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                password: document.getElementById('clientPassword').value,
+                phone: document.getElementById('clientPhone').value
+            };
+
+            try {
+                const res = await fetch('/api/clients', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Novo cliente cadastrado com sucesso!');
+                    document.getElementById('clientRegisterForm').reset();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Alert helper
+        function showSuccessAlert(msg) {
+            const alert = document.getElementById('alertMsg');
+            alert.textContent = msg;
+            alert.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 4000);
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = data.redirect;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        checkAuth();
+    </script>
+</body>
+</html>
