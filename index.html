@@ -83,7 +83,7 @@
     rel="stylesheet">
 
 
-  <link rel="stylesheet" href="public/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -96,7 +96,7 @@
       <div class="container">
         <div class="nav-inner">
           <a href="#hero" class="nav-logo" aria-label="ACMais - página inicial">
-            <img id="theme-logo" class="theme-aware-logo" src="public/img/logo ACMAIS CCBPOE Light.png" alt="ACMais Logo"
+            <img id="theme-logo" class="theme-aware-logo" src="/img/logo ACMAIS CCBPOE Light.png" alt="ACMais Logo"
               width="150" height="40">
           </a>
 
@@ -109,6 +109,7 @@
           </div>
 
           <div class="nav-actions">
+            <a href="/colaborador" class="btn-nav-portal" style="background: rgba(123, 94, 167, 0.1); color: var(--roxo); border-color: rgba(123, 94, 167, 0.2);" aria-label="Acessar área do colaborador">Colaborador</a>
             <a href="#area-cliente" class="btn-nav-portal" aria-label="Acessar área do cliente">Área do Cliente</a>
             <button id="theme-toggle" class="btn-theme-toggle" aria-label="Alternar tema">
               <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -143,6 +144,7 @@
         <a href="#diferenciais">Por que ACMais</a>
         <a href="#blog">Blog</a>
         <a href="#contato">Contato</a>
+        <a href="/colaborador" class="btn-nav-portal" style="background: rgba(123, 94, 167, 0.1); color: var(--roxo); border-color: rgba(123, 94, 167, 0.2); margin-bottom: 8px;">Colaborador</a>
         <a href="#area-cliente" class="btn-nav-portal">Área do Cliente</a>
         <button id="theme-toggle-mobile" class="btn-theme-toggle" aria-label="Alternar tema">
           <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -244,7 +246,7 @@
         <div class="services-grid" role="list">
 
           <article class="service-card sc-1" role="listitem">
-            <div class="service-icon" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="service-icon" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <h3>Contabilidade Consultiva</h3>
             <p>
               Muito além de cumprir obrigações fiscais. Somos o parceiro estratégico
@@ -262,7 +264,7 @@
           </article>
 
           <article class="service-card sc-2" role="listitem">
-            <div class="service-icon" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="service-icon" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <h3>BPO Financeiro</h3>
             <p>
               Terceirize sua área financeira com quem entende do seu negócio.
@@ -280,7 +282,7 @@
           </article>
 
           <article class="service-card sc-3" role="listitem">
-            <div class="service-icon" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="service-icon" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <h3>Contabilidade para Médicos</h3>
             <p>
               Especialidade que exige especialização. Abrimos PJ médica, otimizamos
@@ -401,127 +403,13 @@
         </div>
 
         <!-- Diretoria -->
-        <div class="diretoria-grid" role="list" aria-label="Diretoria">
-
-          <!-- Andrezza - Diretora -->
-          <article class="membro-card card-diretoria" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/andrezza.jpg"
-                alt="Andrezza, Diretora da ACMais"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:none;" aria-hidden="true">AO</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-diretoria">Diretoria</span>
-              <div class="membro-name">Andrezza</div>
-              <div class="membro-role">Diretora</div>
-            </div>
-          </article>
-
-          <!-- Patricia Jota - Diretora de Operações -->
-          <article class="membro-card card-diretoria" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/patricia.jpg"
-                alt="Patrícia, Diretora de Operações da ACMais"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:none;" aria-hidden="true">PJ</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-diretoria">Diretoria</span>
-              <div class="membro-name">Patrícia Jota</div>
-              <div class="membro-role">Diretora de Operações</div>
-            </div>
-          </article>
-
+        <div class="diretoria-grid" id="diretoria-dynamic-grid" role="list" aria-label="Diretoria">
+          <!-- Dinâmico -->
         </div>
 
         <!-- Coordenação -->
-        <div class="coordenacao-grid" role="list" aria-label="Coordenação">
-
-          <!-- Graziele - Coordenadora Contábil -->
-          <article class="membro-card" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/graziele.jpg"
-                alt="Graziele, Coordenadora Contábil"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:none;" aria-hidden="true">GR</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-coordenacao">Coordenação</span>
-              <div class="membro-name">Graziele</div>
-              <div class="membro-role">Coordenadora Contábil</div>
-            </div>
-          </article>
-
-          <!-- Lucelia - Coordenadora Fiscal -->
-          <article class="membro-card" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/lucelia.jpg"
-                alt="Lucelia, Coordenadora Fiscal"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:none;" aria-hidden="true">LC</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-coordenacao">Coordenação</span>
-              <div class="membro-name">Lucelia</div>
-              <div class="membro-role">Coordenadora Fiscal</div>
-            </div>
-          </article>
-
-          <!-- Fernanda - Coordenadora Departamento Pessoal -->
-          <article class="membro-card" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/fernanda.jpg"
-                alt="Fernanda, Coordenadora de Departamento Pessoal"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:none;" aria-hidden="true">FN</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-coordenacao">Coordenação</span>
-              <div class="membro-name">Fernanda</div>
-              <div class="membro-role">Coordenadora Dep. Pessoal</div>
-            </div>
-          </article>
-
-          <!-- Mara - Conformidade e Legalização (foto pendente) -->
-          <article class="membro-card" role="listitem">
-            <div class="membro-img-wrap">
-              <img
-                class="membro-img"
-                src="public/img/equipe/mara.jpg"
-                alt="Mara, Conformidade e Legalização"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                loading="lazy"
-              >
-              <div class="membro-fallback" style="display:flex;" aria-hidden="true">MR</div>
-            </div>
-            <div class="membro-info">
-              <span class="membro-tag tag-coordenacao">Coordenação</span>
-              <div class="membro-name">Mara</div>
-              <div class="membro-role">Conformidade e Legalização</div>
-            </div>
-          </article>
-
+        <div class="coordenacao-grid" id="coordenacao-dynamic-grid" role="list" aria-label="Coordenação">
+          <!-- Dinâmico -->
         </div>
       </div>
     </section>
@@ -536,37 +424,37 @@
         </div>
         <div class="dif-grid" role="list">
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"> <img src="public/img/thumbs/abordagem-consultiva.png" alt=""> </div>
+            <div class="dif-icon" aria-hidden="true"> <img src="/img/thumbs/abordagem-consultiva.png" alt=""> </div>
             <h4>Abordagem consultiva</h4>
             <p>Não somos apenas um escritório contábil. Somos parceiros estratégicos que entendem o seu negócio e
               antecipam oportunidades e riscos.</p>
           </div>
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"> <img src="public/img/thumbs/agilidade-tecnologia.png" alt=""> </div>
+            <div class="dif-icon" aria-hidden="true"> <img src="/img/thumbs/agilidade-tecnologia.png" alt=""> </div>
             <h4>Agilidade e tecnologia</h4>
             <p>Processos automatizados, portal do cliente online e comunicação ativa. Você sempre tem visibilidade do
               que está acontecendo.</p>
           </div>
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"><img src="public/img/thumbs/especializacao-medica.svg" alt=""></div>
+            <div class="dif-icon" aria-hidden="true"><img src="/img/thumbs/especializacao-medica.svg" alt=""></div>
             <h4>Especialização em médicos</h4>
             <p>Um dos poucos escritórios com time dedicado exclusivamente à contabilidade para médicos, clínicas e
               profissionais da saúde.</p>
           </div>
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"><img src="public/img/thumbs/seguranca-conformidade.png" alt=""></div>
+            <div class="dif-icon" aria-hidden="true"><img src="/img/thumbs/seguranca-conformidade.png" alt=""></div>
             <h4>Segurança e conformidade</h4>
             <p>Seus dados protegidos com LGPD, backups, certificado digital e total conformidade com obrigações fiscais
               e tributárias.</p>
           </div>
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"><img src="public/img/thumbs/bh-brasil.png" alt=""></div>
+            <div class="dif-icon" aria-hidden="true"><img src="/img/thumbs/bh-brasil.png" alt=""></div>
             <h4>BH e Brasil</h4>
             <p>Raízes sólidas em Belo Horizonte com a capacidade de atender empresas em todo o território nacional
               digitalmente.</p>
           </div>
           <div class="dif-item" role="listitem">
-            <div class="dif-icon" aria-hidden="true"><img src="public/img/thumbs/confianca-25-anos.png" alt=""></div>
+            <div class="dif-icon" aria-hidden="true"><img src="/img/thumbs/confianca-25-anos.png" alt=""></div>
             <h4>25 anos de confiança</h4>
             <p>Um quarto de século construindo relacionamentos duradouros. Clientes que começaram conosco e nunca
               saíram.</p>
@@ -588,7 +476,7 @@
             <p class="dep-text">"A ACMais transformou a visão financeira da nossa empresa. Passamos a tomar decisões com
               muito mais clareza e segurança."</p>
             <div class="dep-author">
-              <div class="dep-avatar" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+              <div class="dep-avatar" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
               <div>
                 <div class="dep-author-name">Cliente ACMais</div>
                 <div class="dep-author-role">Empresária, BH</div>
@@ -600,7 +488,7 @@
             <p class="dep-text">"Como médico, nunca me preocupei com a parte tributária. A ACMais cuida de tudo e ainda
               me orienta sobre as melhores estratégias fiscais."</p>
             <div class="dep-author">
-              <div class="dep-avatar" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+              <div class="dep-avatar" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
               <div>
                 <div class="dep-author-name">Dr. Cliente</div>
                 <div class="dep-author-role">Médico especialista</div>
@@ -612,7 +500,7 @@
             <p class="dep-text">"O BPO Financeiro nos permitiu focar 100% no nosso core business. Nossa gestão
               financeira nunca foi tão organizada e transparente."</p>
             <div class="dep-author">
-              <div class="dep-avatar" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+              <div class="dep-avatar" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
               <div>
                 <div class="dep-author-name">Gestor, PME</div>
                 <div class="dep-author-role">Empresa de tecnologia</div>
@@ -643,7 +531,7 @@
 
         <div class="blog-grid" role="list">
           <article class="blog-card bc-1" role="listitem">
-            <div class="blog-img" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="blog-img" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <div class="blog-body">
               <div class="blog-cat">Planejamento Tributário</div>
               <h3>Como reduzir legalmente a carga tributária da sua empresa em 2025</h3>
@@ -657,7 +545,7 @@
           </article>
 
           <article class="blog-card bc-2" role="listitem">
-            <div class="blog-img" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="blog-img" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <div class="blog-body">
               <div class="blog-cat">Médicos & PJ</div>
               <h3>PJ médica: quando vale a pena e como abrir do jeito certo</h3>
@@ -671,7 +559,7 @@
           </article>
 
           <article class="blog-card bc-3" role="listitem">
-            <div class="blog-img" aria-hidden="true"><img src="public/img/thumbs/.png" alt=""></div>
+            <div class="blog-img" aria-hidden="true"><img src="/img/thumbs/.png" alt=""></div>
             <div class="blog-body">
               <div class="blog-cat">BPO Financeiro</div>
               <h3>Por que terceirizar o financeiro pode salvar o seu negócio</h3>
@@ -704,7 +592,7 @@
         <div class="ac-portals" role="list">
           <a href="https://onvio.com.br" target="_blank" rel="noopener noreferrer" class="ac-portal-card"
             role="listitem" aria-label="Acessar portal Onvio (abre em nova aba)">
-            <div class="ac-portal-icon" aria-hidden="true"><img src="public/img/thumbs/onvio.svg" alt=""></div>
+            <div class="ac-portal-icon" aria-hidden="true"><img src="/img/thumbs/onvio.svg" alt=""></div>
             <div class="ac-portal-info">
               <h4>Portal Onvio</h4>
               <p>Acesse documentos, assinaturas digitais e comunicados via plataforma Onvio.</p>
@@ -713,7 +601,7 @@
           </a>
 
           <div class="ac-portal-card" role="listitem" aria-label="Portal interno ACMais">
-            <div class="ac-portal-icon" style="background:rgba(123,94,167,0.12)" aria-hidden="true"><img src="public/img/thumbs/acmais - Logo.png" alt=""></div>
+            <div class="ac-portal-icon" style="background:rgba(123,94,167,0.12)" aria-hidden="true"><img src="/img/thumbs/acmais - Logo.png" alt=""></div>
             <div class="ac-portal-info">
               <h4>Portal ACMais</h4>
               <p>Guias em aberto, honorários, CND e validade do certificado digital.</p>
@@ -1145,7 +1033,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#hero" class="nav-logo" aria-label="ACMais - voltar ao topo">
-            <img id="footer-theme-logo" class="theme-aware-logo" src="public/img/logo ACMAIS CCBPOE Light.png"
+            <img id="footer-theme-logo" class="theme-aware-logo" src="/img/logo ACMAIS CCBPOE Light.png"
               alt="ACMais Logo" width="140" height="36">
           </a>
           <p>Contabilidade consultiva, BPO Financeiro e especialistas em médicos. 25 anos cuidando do que mais importa.
@@ -1606,9 +1494,59 @@
       }
     }
 
-    // Initialize the parallax system when DOM is ready
+    /* ===== LOAD DYNAMIC TEAM MEMBERS ===== */
+    async function loadTeam() {
+      try {
+        const res = await fetch('/api/team');
+        const team = await res.json();
+        
+        const dirGrid = document.getElementById('diretoria-dynamic-grid');
+        const coordGrid = document.getElementById('coordenacao-dynamic-grid');
+        
+        if (!dirGrid || !coordGrid) return;
+        
+        dirGrid.innerHTML = '';
+        coordGrid.innerHTML = '';
+        
+        team.forEach(m => {
+          const card = document.createElement('article');
+          card.className = m.level === 'diretoria' ? 'membro-card card-diretoria' : 'membro-card';
+          card.setAttribute('role', 'listitem');
+          
+          const imgSrc = m.image.startsWith('public/') ? m.image.substring(7) : m.image;
+          card.innerHTML = `
+            <div class="membro-img-wrap">
+              <img
+                class="membro-img"
+                src="${imgSrc}"
+                alt="${m.name}, ${m.role}"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                loading="lazy"
+              >
+              <div class="membro-fallback" style="display:none;" aria-hidden="true">${m.fallback || 'AO'}</div>
+            </div>
+            <div class="membro-info">
+              <span class="membro-tag ${m.level === 'diretoria' ? 'tag-diretoria' : 'tag-coordenacao'}">${m.level === 'diretoria' ? 'Diretoria' : 'Coordenação'}</span>
+              <div class="membro-name">${m.name}</div>
+              <div class="membro-role">${m.role}</div>
+            </div>
+          `;
+          
+          if (m.level === 'diretoria') {
+            dirGrid.appendChild(card);
+          } else {
+            coordGrid.appendChild(card);
+          }
+        });
+      } catch (err) {
+        console.error('Erro ao carregar equipe:', err);
+      }
+    }
+
+    // Initialize the parallax system and dynamic team when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       new ParallaxManager();
+      loadTeam();
     });
 
     /* ===== THEME SWITCHER ===== */
