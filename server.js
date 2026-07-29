@@ -139,8 +139,22 @@ app.get('/colaborador/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'colaborador_login.html'));
 });
 
+// Alias for static HTML link used in GitHub Pages
+app.get('/colaborador_login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'colaborador_login.html'));
+});
+
+app.get('/colaborador_dashboard.html', requireCollabAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'colaborador_dashboard.html'));
+});
+
 // Protected Route: Dashboard (Área do Cliente)
 app.get('/dashboard', requireClientAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+});
+
+// Alias for static HTML link used in GitHub Pages
+app.get('/dashboard.html', requireClientAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
@@ -302,6 +316,61 @@ app.post('/api/team/update', requireCollabAuth, upload.single('imageFile'), (req
 
     saveTeamMembers(team);
     res.json({ success: true, message: 'Dados do membro atualizados com sucesso.', updatedMember: team[index] });
+});
+// 4.1 Add A Cara da ACMais leaders (Admin only)
+app.post('/api/team/add', requireCollabAuth, upload.single('imageFile'), (req, res) => {
+    if (req.session.role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Apenas Administradores podem adicionar à liderança.' });
+    }
+
+    const { name, role, level, fallback } = req.body;
+    if (!name || !role || !level) {
+        return res.status(400).json({ success: false, message: 'Dados incompletos.' });
+    }
+
+    let team = getTeamMembers();
+    
+    // Generate a simple ID based on name
+    let baseId = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+    let memberId = baseId;
+    let counter = 1;
+    while(team.some(t => t.id === memberId)) {
+        memberId = `${baseId}${counter}`;
+        counter++;
+    }
+
+    const newMember = {
+        id: memberId,
+        name,
+        role,
+        level,
+        fallback: fallback ? fallback.toUpperCase() : name.substring(0, 2).toUpperCase(),
+        image: req.file ? `public/img/equipe/${req.file.filename}` : ''
+    };
+
+    team.push(newMember);
+    saveTeamMembers(team);
+    res.json({ success: true, message: 'Membro adicionado com sucesso.', member: newMember });
+});
+
+// 4.2 Delete A Cara da ACMais leaders (Admin only)
+app.delete('/api/team/:id', requireCollabAuth, (req, res) => {
+    if (req.session.role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Apenas Administradores podem excluir da liderança.' });
+    }
+
+    const targetId = req.params.id;
+    let team = getTeamMembers();
+    
+    const initialLength = team.length;
+    team = team.filter(t => t.id !== targetId);
+    
+    if (team.length === initialLength) {
+        return res.status(404).json({ success: false, message: 'Membro da liderança não encontrado.' });
+    }
+
+    saveTeamMembers(team);
+    res.json({ success: true, message: 'Membro excluído com sucesso.' });
 });
 
 // 5. Fetch Client List (Admin & Coordenador roles)
