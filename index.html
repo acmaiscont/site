@@ -1570,13 +1570,23 @@
       }
 
       updateClasses() {
+        const total = this.cards.length;
+        if (total === 0) return;
+
         this.cards.forEach((card, i) => {
           card.className = card.className.replace(/card-active|card-prev-1|card-next-1|card-prev-2|card-next-2|card-hidden/g, '').trim();
           
           let diff = i - this.currentIndex;
-          const total = this.cards.length;
 
-          // Handle wrap-around for infinite carousel illusion (optional, doing simple bounded logic for now)
+          // Normalize diff to wrap around for infinite loop ONLY for 3 or more items
+          if (total > 2) {
+            if (diff > Math.floor(total / 2)) {
+              diff -= total;
+            } else if (diff < -Math.floor((total - 1) / 2)) {
+              diff += total;
+            }
+          }
+
           if (diff === 0) {
             card.classList.add('card-active');
           } else if (diff === -1) {
