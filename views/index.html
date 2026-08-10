@@ -1618,7 +1618,7 @@
 
     async function loadTeam() {
       try {
-        const res = await fetch('/api/team');
+        const res = await fetch('./data/team_members.json');
         const team = await res.json();
         
         const dirGrid = document.getElementById('diretoria-dynamic-grid');
