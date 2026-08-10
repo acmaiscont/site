@@ -1099,20 +1099,54 @@
     }
 
     /* grids */
-    .diretoria-grid {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
+    .team-carousel-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      padding: 40px 0;
       margin-bottom: 64px;
-      flex-wrap: wrap;
+      display: flex;
+      align-items: center;
     }
 
-    .coordenacao-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 32px;
-      justify-items: center;
+    .team-carousel-track {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      height: 380px; /* Base height for the cards */
+      perspective: 1000px;
     }
+    
+    .carousel-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-base);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 20;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .carousel-nav-btn:hover {
+      background: var(--ciano);
+      color: var(--white);
+      border-color: var(--ciano);
+    }
+    
+    .carousel-nav-btn.prev { left: 10px; }
+    .carousel-nav-btn.next { right: 10px; }
 
     /* member card */
     .membro-card {
@@ -1121,16 +1155,65 @@
       border-radius: var(--radius-lg);
       padding: 24px;
       text-align: center;
-      transition: var(--transition);
+      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease, box-shadow 0.6s ease, z-index 0s;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 20px;
-      position: relative;
+      position: absolute; /* Changed for carousel */
       overflow: hidden;
       box-shadow: var(--shadow-sm);
       width: 100%;
-      max-width: 320px;
+      max-width: 300px;
+      opacity: 0;
+      pointer-events: none; /* Only active cards can be interacted with */
+    }
+    
+    /* Fisheye Effect States */
+    .membro-card.card-active {
+      transform: translateX(0) scale(1.1);
+      opacity: 1;
+      z-index: 10;
+      pointer-events: auto;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+    
+    .membro-card.card-prev-1 {
+      transform: translateX(-260px) scale(0.85);
+      opacity: 0.6;
+      z-index: 5;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    
+    .membro-card.card-next-1 {
+      transform: translateX(260px) scale(0.85);
+      opacity: 0.6;
+      z-index: 5;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .membro-card.card-prev-2 {
+      transform: translateX(-480px) scale(0.65);
+      opacity: 0.2;
+      z-index: 3;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .membro-card.card-next-2 {
+      transform: translateX(480px) scale(0.65);
+      opacity: 0.2;
+      z-index: 3;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    
+    .membro-card.card-hidden {
+      transform: translateX(0) scale(0.4);
+      opacity: 0;
+      z-index: 1;
     }
 
     .card-diretoria {
@@ -2511,13 +2594,13 @@
         right: 20px;
       }
 
-      .coordenacao-grid {
-        grid-template-columns: 1fr 1fr;
+      .team-carousel-track {
+        height: 350px;
       }
-
-      .diretoria-grid {
-        gap: 24px;
-      }
+      .membro-card.card-prev-1 { transform: translateX(-150px) scale(0.85); }
+      .membro-card.card-next-1 { transform: translateX(150px) scale(0.85); }
+      .membro-card.card-prev-2 { transform: translateX(-250px) scale(0.65); opacity: 0; }
+      .membro-card.card-next-2 { transform: translateX(250px) scale(0.65); opacity: 0; }
     }
 
     @media (max-width: 480px) {
@@ -2528,10 +2611,6 @@
       .ac-tab {
         flex: none;
         min-width: 50%;
-      }
-
-      .coordenacao-grid {
-        grid-template-columns: 1fr;
       }
 
       .membro-card,

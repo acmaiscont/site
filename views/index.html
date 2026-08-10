@@ -403,13 +403,25 @@
         </div>
 
         <!-- Diretoria -->
-        <div class="diretoria-grid" id="diretoria-dynamic-grid" role="list" aria-label="Diretoria">
-          <!-- Dinâmico -->
+        <div class="team-carousel-wrapper" id="carousel-diretoria-wrapper">
+          <button class="carousel-nav-btn prev" aria-label="Anterior" onclick="diretoriaCarousel.prev()">&#10094;</button>
+          <div class="team-carousel-track" id="diretoria-dynamic-grid" role="list" aria-label="Diretoria">
+            <!-- Dinâmico -->
+          </div>
+          <button class="carousel-nav-btn next" aria-label="Próximo" onclick="diretoriaCarousel.next()">&#10095;</button>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <span class="section-label" style="color: var(--roxo)">Nossa coordenação</span>
         </div>
 
         <!-- Coordenação -->
-        <div class="coordenacao-grid" id="coordenacao-dynamic-grid" role="list" aria-label="Coordenação">
-          <!-- Dinâmico -->
+        <div class="team-carousel-wrapper" id="carousel-coordenacao-wrapper" style="margin-bottom: 0;">
+          <button class="carousel-nav-btn prev" aria-label="Anterior" onclick="coordenacaoCarousel.prev()">&#10094;</button>
+          <div class="team-carousel-track" id="coordenacao-dynamic-grid" role="list" aria-label="Coordenação">
+            <!-- Dinâmico -->
+          </div>
+          <button class="carousel-nav-btn next" aria-label="Próximo" onclick="coordenacaoCarousel.next()">&#10095;</button>
         </div>
       </div>
     </section>
@@ -1490,19 +1502,18 @@
 
     /* ===== LOAD DYNAMIC TEAM MEMBERS ===== */
     async function loadTeam() {
-      try {
-        const res = await fetch('/api/team');
-        const team = await res.json();
-        
-        const dirGrid = document.getElementById('diretoria-dynamic-grid');
-        const coordGrid = document.getElementById('coordenacao-dynamic-grid');
-        
-        if (!dirGrid || !coordGrid) return;
-        
-        dirGrid.innerHTML = '';
-        coordGrid.innerHTML = '';
-        
-        team.forEach(m => {
+    class FisheyeCarousel {
+      constructor(trackElement, items) {
+        this.track = trackElement;
+        this.items = items;
+        this.currentIndex = 0;
+        this.cards = [];
+        this.render();
+      }
+
+      render() {
+        this.track.innerHTML = '';
+        this.items.forEach((m, index) => {
           const card = document.createElement('article');
           card.className = m.level === 'diretoria' ? 'membro-card card-diretoria' : 'membro-card';
           card.setAttribute('role', 'listitem');
@@ -1526,12 +1537,79 @@
             </div>
           `;
           
-          if (m.level === 'diretoria') {
-            dirGrid.appendChild(card);
+          card.addEventListener('click', () => {
+            this.currentIndex = index;
+            this.updateClasses();
+          });
+
+          this.cards.push(card);
+          this.track.appendChild(card);
+        });
+
+        this.updateClasses();
+      }
+
+      updateClasses() {
+        this.cards.forEach((card, i) => {
+          card.className = card.className.replace(/card-active|card-prev-1|card-next-1|card-prev-2|card-next-2|card-hidden/g, '').trim();
+          
+          let diff = i - this.currentIndex;
+          const total = this.cards.length;
+
+          // Handle wrap-around for infinite carousel illusion (optional, doing simple bounded logic for now)
+          if (diff === 0) {
+            card.classList.add('card-active');
+          } else if (diff === -1) {
+            card.classList.add('card-prev-1');
+          } else if (diff === 1) {
+            card.classList.add('card-next-1');
+          } else if (diff === -2) {
+            card.classList.add('card-prev-2');
+          } else if (diff === 2) {
+            card.classList.add('card-next-2');
           } else {
-            coordGrid.appendChild(card);
+            card.classList.add('card-hidden');
           }
         });
+      }
+
+      next() {
+        if (this.currentIndex < this.cards.length - 1) {
+          this.currentIndex++;
+        } else {
+          this.currentIndex = 0; // Loop back
+        }
+        this.updateClasses();
+      }
+
+      prev() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+        } else {
+          this.currentIndex = this.cards.length - 1; // Loop forward
+        }
+        this.updateClasses();
+      }
+    }
+
+    let diretoriaCarousel, coordenacaoCarousel;
+
+    async function loadTeam() {
+      try {
+        const res = await fetch('/api/team');
+        const team = await res.json();
+        
+        const dirGrid = document.getElementById('diretoria-dynamic-grid');
+        const coordGrid = document.getElementById('coordenacao-dynamic-grid');
+        
+        if (!dirGrid || !coordGrid) return;
+        
+        const dirMembers = team.filter(m => m.level === 'diretoria');
+        const coordMembers = team.filter(m => m.level === 'coordenacao');
+
+        diretoriaCarousel = new FisheyeCarousel(dirGrid, dirMembers);
+        coordenacaoCarousel = new FisheyeCarousel(coordGrid, coordMembers);
+        
       } catch (err) {
         console.error('Erro ao carregar equipe:', err);
       }
