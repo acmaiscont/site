@@ -1169,9 +1169,9 @@
       pointer-events: none; /* Only active cards can be interacted with */
     }
     
-    /* Fisheye Effect States */
+    /* Fisheye Effect States with 3D Rotation */
     .membro-card.card-active {
-      transform: translateX(0) scale(1.1);
+      transform: translateX(0) scale(1.1) rotateY(0deg);
       opacity: 1;
       z-index: 10;
       pointer-events: auto;
@@ -1179,7 +1179,7 @@
     }
     
     .membro-card.card-prev-1 {
-      transform: translateX(-260px) scale(0.85);
+      transform: translateX(-260px) scale(0.85) rotateY(45deg);
       opacity: 0.6;
       z-index: 5;
       pointer-events: auto;
@@ -1187,7 +1187,7 @@
     }
     
     .membro-card.card-next-1 {
-      transform: translateX(260px) scale(0.85);
+      transform: translateX(260px) scale(0.85) rotateY(-45deg);
       opacity: 0.6;
       z-index: 5;
       pointer-events: auto;
@@ -1195,7 +1195,7 @@
     }
 
     .membro-card.card-prev-2 {
-      transform: translateX(-480px) scale(0.65);
+      transform: translateX(-480px) scale(0.65) rotateY(60deg);
       opacity: 0.2;
       z-index: 3;
       pointer-events: auto;
@@ -1203,7 +1203,7 @@
     }
 
     .membro-card.card-next-2 {
-      transform: translateX(480px) scale(0.65);
+      transform: translateX(480px) scale(0.65) rotateY(-60deg);
       opacity: 0.2;
       z-index: 3;
       pointer-events: auto;
@@ -1211,7 +1211,7 @@
     }
     
     .membro-card.card-hidden {
-      transform: translateX(0) scale(0.4);
+      transform: translateX(0) scale(0.4) rotateY(0deg);
       opacity: 0;
       z-index: 1;
     }
@@ -2597,10 +2597,10 @@
       .team-carousel-track {
         height: 350px;
       }
-      .membro-card.card-prev-1 { transform: translateX(-150px) scale(0.85); }
-      .membro-card.card-next-1 { transform: translateX(150px) scale(0.85); }
-      .membro-card.card-prev-2 { transform: translateX(-250px) scale(0.65); opacity: 0; }
-      .membro-card.card-next-2 { transform: translateX(250px) scale(0.65); opacity: 0; }
+      .membro-card.card-prev-1 { transform: translateX(-150px) scale(0.85) rotateY(40deg); }
+      .membro-card.card-next-1 { transform: translateX(150px) scale(0.85) rotateY(-40deg); }
+      .membro-card.card-prev-2 { transform: translateX(-250px) scale(0.65) rotateY(50deg); opacity: 0; }
+      .membro-card.card-next-2 { transform: translateX(250px) scale(0.65) rotateY(-50deg); opacity: 0; }
     }
 
     @media (max-width: 480px) {

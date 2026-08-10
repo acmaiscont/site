@@ -34,8 +34,9 @@ app.use(session({
     }
 }));
 
-// Serve static assets from 'public'
+// Serve static assets from 'public' and 'data'
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
 
 // Mock Databases/JSON state persistence
 const DATA_DIR = path.join(__dirname, 'data');
