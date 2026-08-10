@@ -1501,14 +1501,33 @@
     }
 
     /* ===== LOAD DYNAMIC TEAM MEMBERS ===== */
-    async function loadTeam() {
     class FisheyeCarousel {
       constructor(trackElement, items) {
         this.track = trackElement;
         this.items = items;
         this.currentIndex = 0;
         this.cards = [];
+        this.intervalId = null;
         this.render();
+        this.startAutoScroll();
+      }
+
+      startAutoScroll() {
+        this.stopAutoScroll();
+        this.intervalId = setInterval(() => {
+          this.next(false); // false meaning it's an auto-scroll, not a manual interaction
+        }, 4000);
+      }
+
+      stopAutoScroll() {
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+      }
+      
+      resetAutoScroll() {
+        this.startAutoScroll();
       }
 
       render() {
@@ -1540,6 +1559,7 @@
           card.addEventListener('click', () => {
             this.currentIndex = index;
             this.updateClasses();
+            this.resetAutoScroll();
           });
 
           this.cards.push(card);
@@ -1573,22 +1593,24 @@
         });
       }
 
-      next() {
+      next(manual = true) {
         if (this.currentIndex < this.cards.length - 1) {
           this.currentIndex++;
         } else {
           this.currentIndex = 0; // Loop back
         }
         this.updateClasses();
+        if (manual) this.resetAutoScroll();
       }
 
-      prev() {
+      prev(manual = true) {
         if (this.currentIndex > 0) {
           this.currentIndex--;
         } else {
           this.currentIndex = this.cards.length - 1; // Loop forward
         }
         this.updateClasses();
+        if (manual) this.resetAutoScroll();
       }
     }
 
