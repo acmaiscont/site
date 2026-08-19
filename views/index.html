@@ -1573,34 +1573,37 @@
         const total = this.cards.length;
         if (total === 0) return;
 
-        this.cards.forEach((card, i) => {
+        // Reset all
+        this.cards.forEach(card => {
           card.className = card.className.replace(/card-active|card-prev-1|card-next-1|card-prev-2|card-next-2|card-hidden/g, '').trim();
-          
-          let diff = i - this.currentIndex;
-
-          // Normalize diff to wrap around for infinite loop ONLY for 3 or more items
-          if (total > 2) {
-            if (diff > Math.floor(total / 2)) {
-              diff -= total;
-            } else if (diff < -Math.floor((total - 1) / 2)) {
-              diff += total;
-            }
-          }
-
-          if (diff === 0) {
-            card.classList.add('card-active');
-          } else if (diff === -1) {
-            card.classList.add('card-prev-1');
-          } else if (diff === 1) {
-            card.classList.add('card-next-1');
-          } else if (diff === -2) {
-            card.classList.add('card-prev-2');
-          } else if (diff === 2) {
-            card.classList.add('card-next-2');
-          } else {
-            card.classList.add('card-hidden');
-          }
+          card.classList.add('card-hidden');
         });
+
+        if (total === 1) {
+          this.cards[this.currentIndex].classList.replace('card-hidden', 'card-active');
+          return;
+        }
+
+        if (total === 2) {
+          this.cards[this.currentIndex].classList.replace('card-hidden', 'card-active');
+          this.cards[(this.currentIndex + 1) % 2].classList.replace('card-hidden', 'card-next-1');
+          return;
+        }
+
+        if (total === 3 || total === 4) {
+          this.cards[this.currentIndex].classList.replace('card-hidden', 'card-active');
+          this.cards[(this.currentIndex + 1) % total].classList.replace('card-hidden', 'card-next-1');
+          this.cards[(this.currentIndex - 1 + total) % total].classList.replace('card-hidden', 'card-prev-1');
+          return;
+        }
+
+        if (total >= 5) {
+          this.cards[this.currentIndex].classList.replace('card-hidden', 'card-active');
+          this.cards[(this.currentIndex + 1) % total].classList.replace('card-hidden', 'card-next-1');
+          this.cards[(this.currentIndex + 2) % total].classList.replace('card-hidden', 'card-next-2');
+          this.cards[(this.currentIndex - 1 + total) % total].classList.replace('card-hidden', 'card-prev-1');
+          this.cards[(this.currentIndex - 2 + total) % total].classList.replace('card-hidden', 'card-prev-2');
+        }
       }
 
       next(manual = true) {
@@ -1628,8 +1631,16 @@
 
     async function loadTeam() {
       try {
-        const res = await fetch('./data/team_members.json');
-        const team = await res.json();
+        let team;
+        try {
+          const res = await fetch('./data/team_members.json');
+          if (!res.ok) throw new Error("Static fetch failed");
+          team = await res.json();
+        } catch (e) {
+          // Fallback para localhost caso o express.static /data não esteja rodando corretamente
+          const fallbackRes = await fetch('/api/team');
+          team = await fallbackRes.json();
+        }
         
         const dirGrid = document.getElementById('diretoria-dynamic-grid');
         const coordGrid = document.getElementById('coordenacao-dynamic-grid');
