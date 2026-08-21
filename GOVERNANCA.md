@@ -1,76 +1,50 @@
-# Governança de Deploy e Arquitetura do Projeto
+﻿# Governança de Deploy e Arquitetura do Projeto ACMais
 
-Este documento detalha o funcionamento da arquitetura deste projeto, especialmente abordando a diferença entre o ambiente de desenvolvimento local (Node.js) e o ambiente de produção estático (GitHub Pages), e estabelece regras claras de deploy para que não ocorram quebras visuais e de rotas (como páginas em branco ou sem formatação).
+Este documento detalha o funcionamento da arquitetura deste projeto, estabelece regras de deploy e explica as principais funcionalidades e animações presentes no site.
 
-## 1. O Problema das Quebras Visuais
+## 1. O Problema das Quebras Visuais e Rotas
+Durante o desenvolvimento, o projeto utiliza um servidor Express (server.js) que serve as rotas apontando para a pasta /views.
+O GitHub Pages, no entanto, é um servidor puramente estático e não executa o server.js.
 
-Durante o desenvolvimento, o projeto utiliza um servidor Express (`server.js`) que:
-1. Serve as rotas de páginas apontando para a pasta `/views` (ex: `res.sendFile('/views/index.html')`).
-2. Serve recursos estáticos (CSS, imagens e JS do front-end) a partir da pasta `/public` de forma "transparente" na raiz (ex: `/css/style.css`).
+- Se a página HTML estiver em /views/index.html, no GitHub Pages o usuário teria que acessar seusite.com/views/.
 
-**O que acontece no GitHub Pages:**
-O GitHub Pages é um servidor puramente estático. Ele **NÃO executa o `server.js`** nem possui regras de roteamento dinâmico. Ele apenas pega os arquivos exatamente onde estão e os serve no navegador.
-
-- Se a página HTML estiver em `/views/index.html`, o usuário teria que acessar `seusite.com/views/`.
-- Se o HTML estiver na raiz e referenciar `<link href="/css/style.css">`, mas o CSS estiver dentro de `/public/css/style.css`, **o GitHub Pages não encontrará o CSS** e a página perderá todos os elementos visuais (ficando apenas texto).
-
-## 2. A Solução (Regra de Deploy)
-
-Para que o site funcione perfeitamente no GitHub Pages, os arquivos do front-end devem ser consolidados na raiz da branch de deploy (`gh-pages`).
-
-A estrutura na branch `gh-pages` DEVE obrigatoriamente ser:
-```
-/ (raiz)
-├── index.html (copiado de /views/)
-├── dashboard.html (copiado de /views/)
-├── colaborador_dashboard.html (copiado de /views/)
-├── colaborador_login.html (copiado de /views/)
-├── css/ (copiado de /public/css/)
-├── img/ (copiado de /public/img/)
-└── js/ (copiado de /public/js/) Se houver
-```
-
-## 3. Como Fazer o Deploy Corretamente
-
-Sempre que fizer alterações no HTML (`views/`) ou no CSS/Imagens (`public/`), você deve transferi-los para a raiz da branch `gh-pages` antes de empurrar para o servidor online.
+### Regra de Deploy
+Para que o site funcione perfeitamente no GitHub Pages, os arquivos do front-end devem ser consolidados na **raiz** da branch de deploy (gh-pages).
+Sempre que fizer alterações, você deve transferi-los para a raiz antes de enviar para o servidor online.
 
 ### Comando Manual de Deploy (No Windows / PowerShell):
-Caso precise fazer o deploy manual a partir da branch `main`, siga os passos:
-
-```powershell
-# 1. Mude para a branch gh-pages
+\\\powershell
 git checkout gh-pages
-
-# 2. Copie os arquivos de views para a raiz
 Copy-Item -Path views\*.html -Destination . -Force
-
-# 3. Copie os arquivos de public para a raiz
 Copy-Item -Path public\* -Destination . -Recurse -Force
-
-# 4. Adicione, faça o commit e envie (Push)
+Copy-Item -Path data\* -Destination .\data\ -Recurse -Force
 git add .
-git commit -m "Deploy atualizado com arquivos de views e public na raiz"
+git commit -m "Deploy"
 git push origin gh-pages
-
-# 5. Volte para a branch main
 git checkout main
-```
+\\\
 
-## 4. O Backend (Node.js e JSON)
+## 2. Principais Funcionalidades do Site
 
-Lembre-se que funções como salvar clientes e editar banco de dados (`data/clients.json`) **NÃO FUNCIONAM** no GitHub Pages. Se o objetivo final é usar o painel do cliente de forma dinâmica na internet, este projeto precisará ser hospedado em um serviço como **Render, Railway, Heroku ou Vercel** no futuro.
+### A. Carrossel 3D (Efeito Fisheye Infinito)
+Na seção "A Cara da ACMais", a equipe é exibida em um carrossel 3D contínuo (loop infinito).
+- **Como funciona:** O script Javascript (FisheyeCarousel em iews/index.html) calcula a distância matemática de cada membro em relação ao centro e adiciona classes CSS (card-active, card-prev-1, etc). 
+- **Ocultação Automática:** É configurado para exibir no máximo 5 pessoas (1 no centro e 2 em cada lado). O resto dos membros recebem a classe card-hidden.
+- **Rolagem Idle:** Se o usuário não interagir, o carrossel gira automaticamente a cada 4 segundos.
 
-## 5. Caminhos Absolutos vs Relativos no JavaScript
+### B. Fallback de API (GitHub Pages vs Localhost)
+Como o GitHub Pages não suporta requisições para /api/team (pois não tem backend), o carregamento da equipe primeiro tenta buscar o arquivo estático diretamente (./data/team_members.json). Caso falhe (comum no localhost se a pasta não estiver servida estaticamente), ele usa o bloco catch e faz um fallback para a API do Node.js /api/team.
+Isso garante que o site funcione simultaneamente em produção e desenvolvimento!
 
-**Atenção aos scripts Inline e arquivos JS:** Caminhos de imagens e CSS manipulados no JavaScript (por exemplo, na função de alternar Tema Light/Dark: `img.src = '/img/logo.png'`) também **NÃO FUNCIONAM** no GitHub Pages se começarem com `/`.
-O GitHub Pages considera a barra `/` como a raiz do domínio global (ex: `usuario.github.io/img/`) em vez do subdiretório do repositório (ex: `usuario.github.io/site/img/`).
+### C. Parallax e Elementos Flutuantes
+O site conta com um gerenciador de parallax (ParallaxManager). Ele monitora o scroll da página e desloca levemente os elementos que possuem atributos data-speed e data-direction. Isso confere um visual moderno e imersivo.
 
-Para evitar a quebra do logo ou de outras imagens controladas via JavaScript:
-- **ERRADO:** `img.src = '/img/logo.png';`
-- **CERTO:** `img.src = './img/logo.png';`
+### D. Scroll Revelação (Fade In)
+Os elementos principais das seções são revelados aos poucos conforme o usuário faz o scroll da página, através de classes eveal e da API IntersectionObserver do Javascript, trazendo elegância similar a grandes sites institucionais.
 
-Certifique-se de que caminhos relativos (com `./`) sejam usados tanto no HTML `<img src="...">` quanto no JavaScript `img.src = ...` quando entre aspas simples.
+### E. Tema Claro / Escuro (Dark Mode)
+O site possui um seletor de tema na navegação. A preferência do usuário é salva no localStorage do navegador, então quando ele retorna ao site, seu tema favorito é lembrado.
 
----
-**Data da Criação:** 22/07/2026
-**Propósito:** Evitar a perda de CSS e rotas devido à incompatibilidade de caminhos entre o Express (Local) e o GitHub Pages (Produção).
+## 3. Gestão de Dados (O Backend Node.js)
+Funções como cadastrar colaboradores (/colaborador_dashboard.html) salvam em arquivos .json usando o backend server.js.
+Como mencionado, o GitHub Pages **NÃO SALVA** dados permanentemente pois não processa back-end. Para uso real do painel administrativo e persistência na web, a aplicação Node.js deve ser hospedada em um serviço Cloud (como Render, Heroku ou VPS).
