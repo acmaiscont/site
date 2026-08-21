@@ -184,7 +184,7 @@
       </div>
 
       <div class="container">
-        <div class="hero-content reveal">
+        <div class="hero-content">
           <div class="hero-badge" aria-label="25 anos de experiÃªncia">
             <span class="hero-badge-dot" aria-hidden="true"></span>
             25 anos de expertise contÃ¡bil
@@ -1657,20 +1657,6 @@
         console.error('Erro ao carregar equipe:', err);
       }
     }
-
-    
-    // Scroll Reveal Observer
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
-    revealElements.forEach(el => revealObserver.observe(el));
-
     // Initialize the parallax system and dynamic team when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       new ParallaxManager();
