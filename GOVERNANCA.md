@@ -48,3 +48,6 @@ O site possui um seletor de tema na navegação. A preferência do usuário é s
 ## 3. Gestão de Dados (O Backend Node.js)
 Funções como cadastrar colaboradores (/colaborador_dashboard.html) salvam em arquivos .json usando o backend server.js.
 Como mencionado, o GitHub Pages **NÃO SALVA** dados permanentemente pois não processa back-end. Para uso real do painel administrativo e persistência na web, a aplicação Node.js deve ser hospedada em um serviço Cloud (como Render, Heroku ou VPS).
+
+### F. Padrão de Textos e Caracteres Especiais
+Para manter a compatibilidade total de codificação e layout, não utilize o caractere travessão longo (—) nos textos HTML do site. Caso seja necessário espaçar ideias, utilize o hífen comum (-) ou apenas vírgulas e pontos.
