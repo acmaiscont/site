@@ -593,9 +593,40 @@
                     <div id="lideranca-container">
                         <p style="margin-bottom: 30px; color: var(--text-muted);">
                             Utilize o formulário de cada cartão abaixo para modificar as informações exibidas de cada membro da diretoria ou coordenação. 
-                            Você também pode enviar fotos atualizadas.
+                            Você também pode adicionar novos membros ou excluí-los.
                         </p>
                         
+                        <!-- Add New Leader Form -->
+                        <div style="margin-bottom: 30px; padding: 20px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);">
+                            <h3 style="margin-top:0; font-size:1.1rem; margin-bottom:15px;">➕ Adicionar Novo Membro</h3>
+                            <form id="addLeaderForm" onsubmit="addLeader(event)" style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;">
+                                <div class="form-group" style="flex:1; min-width:200px;">
+                                    <label style="font-size:0.8rem;">Nome *</label>
+                                    <input type="text" name="name" required style="padding:8px; font-size:0.9rem;">
+                                </div>
+                                <div class="form-group" style="flex:1; min-width:200px;">
+                                    <label style="font-size:0.8rem;">Cargo (Texto) *</label>
+                                    <input type="text" name="role" required style="padding:8px; font-size:0.9rem;">
+                                </div>
+                                <div class="form-group" style="width:150px;">
+                                    <label style="font-size:0.8rem;">Nível</label>
+                                    <select name="level" style="padding:8px; font-size:0.9rem;">
+                                        <option value="diretoria">Diretoria</option>
+                                        <option value="coordenacao">Coordenação</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="width:80px;">
+                                    <label style="font-size:0.8rem;">Iniciais</label>
+                                    <input type="text" name="fallback" maxlength="2" placeholder="Ex: AO" style="padding:8px; font-size:0.9rem;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:0.8rem;">Foto</label>
+                                    <input type="file" name="imageFile" accept="image/*" style="padding:6px; font-size:0.85rem;">
+                                </div>
+                                <button type="submit" class="btn-primary" style="padding:10px 20px; height: 38px;">Adicionar</button>
+                            </form>
+                        </div>
+
                         <div class="leader-editor-grid" id="leaderEditorGrid">
                             <!-- Cards will load here -->
                         </div>
@@ -897,7 +928,10 @@
                                     <label style="font-size:0.75rem;">Enviar Nova Foto</label>
                                     <input type="file" name="imageFile" accept="image/*" style="padding:6px; font-size:0.85rem;">
                                 </div>
-                                <button type="submit" class="btn-primary" style="padding:8px; font-size:0.8rem; margin-top:5px; width:100%;">Salvar Alterações</button>
+                                <div style="display:flex; gap:10px; margin-top:5px;">
+                                    <button type="submit" class="btn-primary" style="padding:8px; font-size:0.8rem; flex:1;">Salvar Alterações</button>
+                                    <button type="button" onclick="deleteLeader('${member.id}')" style="padding:8px; font-size:0.8rem; flex:1; background-color:var(--error); color:white; border:none; border-radius:6px; cursor:pointer;">Excluir</button>
+                                </div>
                             </div>
                         </form>
                     `;
@@ -923,6 +957,50 @@
 
                 if (data.success) {
                     showSuccessAlert('Membro da liderança atualizado no site principal!');
+                    loadLiderancaSection();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function addLeader(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch('/api/team/add', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Membro adicionado com sucesso!');
+                    form.reset();
+                    loadLiderancaSection();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteLeader(memberId) {
+            if (!confirm('Tem certeza que deseja excluir este membro da liderança?')) return;
+            
+            try {
+                const res = await fetch('/api/team/' + memberId, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccessAlert('Membro excluído com sucesso!');
                     loadLiderancaSection();
                 } else {
                     alert(data.message);

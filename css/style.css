@@ -2657,3 +2657,14 @@
       top: 0;
     }
   
+
+/* Scroll Reveal Transitions */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
