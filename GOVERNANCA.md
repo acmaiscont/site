@@ -51,3 +51,14 @@ Como mencionado, o GitHub Pages **NÃO SALVA** dados permanentemente pois não p
 
 ### F. Padrão de Textos e Caracteres Especiais
 Para manter a compatibilidade total de codificação e layout, não utilize o caractere travessão longo (—) nos textos HTML do site. Caso seja necessário espaçar ideias, utilize o hífen comum (-) ou apenas vírgulas e pontos.
+
+## 4. Histórico de Decisões e Implementações (Log de Governança)
+Abaixo está o registro das principais evoluções do projeto e o motivo técnico pelo qual foram implementadas:
+
+* **Compatibilidade Estática (Deploy GitHub Pages):** O site foi reestruturado para permitir deploy no GitHub Pages. Como este não roda Node.js (server.js), os arquivos HTML e assets (/public) são sempre movidos para a raiz na branch gh-pages.
+* **API Fallback no Frontend:** A função de carregar a equipe tenta acessar primeiro o arquivo estático ./data/team_members.json. Se falhar (ex: rodando localhost via Express), aciona um fallback para a rota /api/team. Isso mantém o sistema flexível para produção (estático) e desenvolvimento (dinâmico).
+* **Carrossel 3D (Fisheye Infinito):** A exibição de liderança foi convertida de grids estáticos para um carrossel 3D infinito. *Motivo:* Os grids quebravam o layout quando havia número ímpar ou excesso de diretores. O carrossel resolve isso calculando distâncias modulares, mostrando no máximo 5 pessoas e escondendo os excedentes sem quebrar o CSS.
+* **Transições (Fade In) [Revertido]:** Tentamos aplicar IntersectionObserver para revelar as sessões no scroll (estilo santionispirits.com). *Motivo da Reversão:* O cliente considerou o efeito muito rápido/lento ou obstrutivo, optando por preservar a velocidade bruta e o carregamento instantâneo de conteúdo.
+* **Padronização de Caracteres (Em-dash):** O caractere travessão longo (—) foi removido globalmente da base de código, pois interagia mal com conversores de encoding de arquivo (UTF-8 vs MacRoman), quebrando os caracteres acentuados. A regra de governança agora orienta o uso exclusivo do hífen comum (-).
+* **CRUD de Colaboradores:** Criação de um painel e rotas no backend (Node.js) capazes de ler e reescrever dinamicamente o arquivo JSON da equipe, permitindo a gestão fácil de funcionários, contornando a complexidade de um banco de dados real (SQL) na fase inicial.
+
